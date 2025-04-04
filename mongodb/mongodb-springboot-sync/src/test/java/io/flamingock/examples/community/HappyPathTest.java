@@ -20,7 +20,10 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import io.flamingock.examples.mongodb.springboot.sync.CommunitySpringbootMongodbSyncApp;
+import io.flamingock.examples.mongodb.springboot.sync.FlamingockCommunityEdition;
+import io.flamingock.examples.mongodb.springboot.sync.changes._1_create_clients_collection;
+import io.flamingock.examples.mongodb.springboot.sync.changes._2_insert_client_federico;
+import io.flamingock.examples.mongodb.springboot.sync.changes._3_insert_client_jorge;
 import io.flamingock.examples.mongodb.springboot.sync.events.FailureEventListener;
 import io.flamingock.examples.mongodb.springboot.sync.events.StartedEventListener;
 import io.flamingock.examples.mongodb.springboot.sync.events.SuccessEventListener;
@@ -46,8 +49,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static io.flamingock.oss.driver.common.mongodb.MongoDBDriverConfiguration.DEFAULT_MIGRATION_REPOSITORY_NAME;
-import static io.flamingock.examples.mongodb.springboot.sync.CommunitySpringbootMongodbSyncApp.CLIENTS_COLLECTION_NAME;
-import static io.flamingock.examples.mongodb.springboot.sync.CommunitySpringbootMongodbSyncApp.DATABASE_NAME;
+import static io.flamingock.examples.mongodb.springboot.sync.FlamingockCommunityEdition.CLIENTS_COLLECTION_NAME;
+import static io.flamingock.examples.mongodb.springboot.sync.FlamingockCommunityEdition.DATABASE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,8 +59,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Testcontainers
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Import({MongoDBSyncSuccessExecutionTest.TestConfiguration.class, CommunitySpringbootMongodbSyncApp.class})
-class MongoDBSyncSuccessExecutionTest {
+@Import({HappyPathTest.TestConfiguration.class, FlamingockCommunityEdition.class})
+class HappyPathTest {
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
@@ -98,19 +101,19 @@ class MongoDBSyncSuccessExecutionTest {
                 .into(new ArrayList<>());
 
         Document aCreateCollection = flamingockDocuments.get(0);
-        assertEquals("create-collection", aCreateCollection.get("changeId"));
+        assertEquals("create-clients-collection", aCreateCollection.get("changeId"));
         assertEquals("EXECUTED", aCreateCollection.get("state"));
-        assertEquals("io.flamingock.examples.mongodb.springboot.sync.changes.ACreateCollection", aCreateCollection.get("changeLogClass"));
+        assertEquals(_1_create_clients_collection.class.getName(), aCreateCollection.get("changeLogClass"));
 
         Document bInsertDocument = flamingockDocuments.get(1);
-        assertEquals("insert-document", bInsertDocument.get("changeId"));
+        assertEquals("insert-client-federico", bInsertDocument.get("changeId"));
         assertEquals("EXECUTED", bInsertDocument.get("state"));
-        assertEquals("io.flamingock.examples.mongodb.springboot.sync.changes.BInsertDocument", bInsertDocument.get("changeLogClass"));
+        assertEquals(_2_insert_client_federico.class.getName(), bInsertDocument.get("changeLogClass"));
 
         Document cInsertAnotherDocument = flamingockDocuments.get(2);
-        assertEquals("insert-another-document", cInsertAnotherDocument.get("changeId"));
+        assertEquals("insert-client-jorge", cInsertAnotherDocument.get("changeId"));
         assertEquals("EXECUTED", cInsertAnotherDocument.get("state"));
-        assertEquals("io.flamingock.examples.mongodb.springboot.sync.changes.CInsertAnotherDocument", cInsertAnotherDocument.get("changeLogClass"));
+        assertEquals(_3_insert_client_jorge.class.getName(), cInsertAnotherDocument.get("changeLogClass"));
 
         assertEquals(3, flamingockDocuments.size());
     }

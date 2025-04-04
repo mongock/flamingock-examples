@@ -17,16 +17,15 @@
 package io.flamingock.examples.mongodb.springboot.sync.changes;
 
 import com.mongodb.client.MongoDatabase;
-import io.flamingock.core.api.annotations.ChangeUnit;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import org.springframework.context.annotation.Profile;
+import io.flamingock.examples.mongodb.springboot.sync.FlamingockCommunityEdition;
 
-@Profile("accepted-profile-1")
-@ChangeUnit(id = "create-collection", order = "1", transactional = false)
-public class ACreateCollection {
+@Change(id = "create-clients-collection", order = "1", transactional = false)
+public class _1_create_clients_collection {
 
     @Execution
     public void execution(MongoDatabase mongoDatabase) {
-        mongoDatabase.createCollection("clientCollection");
+        mongoDatabase.createCollection(FlamingockCommunityEdition.CLIENTS_COLLECTION_NAME);
     }
 }
