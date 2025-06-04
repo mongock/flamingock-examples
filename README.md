@@ -1,4 +1,4 @@
-![Header Image](misc/logo-with-text.png)
+s3  ![Header Image](misc/logo-with-text.png)
 ___
 
 **Flamingock** is the evolution of Mongock, designed as a cloud-native solution for managing versioning, and auditing
@@ -51,6 +51,7 @@ ensure a smooth migration process.
 |                      | **[mongodb-springboot-springdata-3.x](mongodb/mongodb-springboot-springdata-3.x)** | Integration of Flamingock with MongoDB, Spring Boot 3.x, and Spring Data, leveraging the latest Spring features.   |
 |                      | **[mongodb-springboot-sync](mongodb/mongodb-springboot-sync)**                     | Demonstrates Flamingock with MongoDB sync driver and Spring Boot, without relying on Spring Data abstractions.     |
 | **DynamoDB**         | **[dynamodb-standalone](dynamodb/dynamodb-standalone)**                            | Example showcasing Flamingock with DynamoDB in a Java standalone application.                                      |
+| **S3**               | **[s3-dynamodb](s3/s3-dynamodb)**                                                  | Example demonstrating Flamingock with AWS S3 for managing S3 bucket creation in a Java standalone application.     |
 | **Couchbase**        | **[couchbase-standalone](couchbase/couchbase-standalone)**                         | Example of using Flamingock with Couchbase in a Java standalone application.                                       |
 |                      | **[couchbase-springboot-v2](couchbase/couchbase-springboot-v2)**                   | Demonstrates Flamingock with Couchbase and Spring Boot 2.x for database migrations.                                |
 | **MySQL**            | **[mysql-springboot](sql/mysql/mysql-springboot)**                                 | Integration of Flamingock with MySQL and Spring Boot 2.x for database schema migrations.                           |
