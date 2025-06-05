@@ -44,6 +44,8 @@ ensure a smooth migration process.
 
 ## 📂 Index of Examples
 
+## 📂 Index of Examples
+
 | **Technology**       | **Example Project**                                                                | **Description**                                                                                                    |
 |----------------------|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
 | **MongoDB**          | **[mongodb-sync-standalone](mongodb/mongodb-sync-standalone)**                     | Example of using Flamingock with the MongoDB synchronous driver in a Java standalone application.                  |
@@ -54,7 +56,7 @@ ensure a smooth migration process.
 | **Couchbase**        | **[couchbase-standalone](couchbase/couchbase-standalone)**                         | Example of using Flamingock with Couchbase in a Java standalone application.                                       |
 |                      | **[couchbase-springboot-v2](couchbase/couchbase-springboot-v2)**                   | Demonstrates Flamingock with Couchbase and Spring Boot 2.x for database migrations.                                |
 | **MySQL**            | **[mysql-springboot](sql/mysql/mysql-springboot)**                                 | Integration of Flamingock with MySQL and Spring Boot 2.x for database schema migrations.                           |
-
+| **GraalVM**          | **[graalvm-example](graalvm-example)**                                             | Demonstrates how to use Flamingock with GraalVM native image compilation for building fast, lightweight applications. |
 > 🚀 **New examples will be added regularly!** Stay tuned for updates as we expand the repository to cover even more
 > systems and frameworks.
 

@@ -42,3 +42,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/graalvm/flamingock-graalvm-example-0.0.1-SNAPSHOT
