@@ -16,11 +16,9 @@
 
 package io.flamingock.examples.s3;
 
-import io.flamingock.core.configurator.standalone.FlamingockStandalone;
-import io.flamingock.core.pipeline.Stage;
 import io.flamingock.examples.s3.util.DynamoDBUtil;
 import io.flamingock.examples.s3.util.S3Util;
-import io.flamingock.oss.driver.dynamodb.driver.DynamoDBDriver;
+import io.flamingock.community.Flamingock;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.s3.S3Client;
 
@@ -33,11 +31,8 @@ public class S3FlamingockExample {
     }
 
     public void run(S3Client s3Client, DynamoDbClient dynamoDbClient) {
-
-        FlamingockStandalone.local()
-                .setDriver(new DynamoDBDriver(dynamoDbClient))
-                .addStage(new Stage("stage-name")
-                        .addCodePackage("io.flamingock.examples.s3.changes"))
+        Flamingock.builder()
+                .addDependency(dynamoDbClient)
                 .addDependency(s3Client)
                 .build()
                 .run();

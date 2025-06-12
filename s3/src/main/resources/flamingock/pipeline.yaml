@@ -1,0 +1,6 @@
+pipeline:
+  stages:
+    - name: s3-migration
+      description: s3 example
+      sourcesPackage: io.flamingock.examples.s3.changes
+
