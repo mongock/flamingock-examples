@@ -1,3 +1,6 @@
+import java.net.URL
+import javax.xml.parsers.DocumentBuilderFactory
+
 plugins {
     id("java")
 }
@@ -10,15 +13,13 @@ repositories {
     mavenLocal()
 }
 
-val mongodbVersion = "4.3.3"
-val jacksonVersion = "2.15.2"
-val flamingockVersion = "0.0.30-beta"
+val mongodbVersion = "5.2.0" //TODO: we need to support previous versions too
+val flamingockVersion = flamingockVersion()
 dependencies {
-    implementation("io.flamingock:mongodb-sync-v4-driver:$flamingockVersion")
-    implementation("io.flamingock:flamingock-core:$flamingockVersion")
-    implementation("io.flamingock:flamingock-graalvm:$flamingockVersion")
-
-    annotationProcessor("io.flamingock:flamingock-core:$flamingockVersion")
+    implementation(platform("io.flamingock:flamingock-ce-bom:$flamingockVersion"))
+    implementation ("io.flamingock:flamingock-ce-mongodb-sync:${flamingockVersion}") //TODO: remove $flamingockVersion
+    annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion") //TODO: remove $flamingockVersion
+    implementation("io.flamingock:flamingock-graalvm:$flamingockVersion") //TODO: remove $flamingockVersion
 
 
     implementation("org.mongodb:mongodb-driver-sync:$mongodbVersion")
@@ -86,4 +87,28 @@ tasks.register<Exec>("nativeImage") {
 
 
     )
+}
+
+// Get Flamingock version from parameter or last
+fun flamingockVersion(): String {
+    var passedAsParameter = false
+    val flamingockVersionAsParameter: String? = project.findProperty("flamingockVersion")?.toString()
+    val flamingockVersion: String =  if(flamingockVersionAsParameter != null) {
+        passedAsParameter = true
+        flamingockVersionAsParameter
+    } else {
+        //using "release.latest" doesn't play nice with intellij
+        val metadataUrl = "https://repo.maven.apache.org/maven2/io/flamingock/flamingock-core/maven-metadata.xml"
+        try {
+            val metadata = URL(metadataUrl).readText()
+            val documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+            val inputStream = metadata.byteInputStream()
+            val document = documentBuilder.parse(inputStream)
+            document.getElementsByTagName("latest").item(0).textContent
+        } catch (e: Exception) {
+            throw RuntimeException("Cannot obtain Flamingock's latest version")
+        }
+    }
+    logger.lifecycle("Building with flamingock version${if(passedAsParameter)"[from parameter]" else ""}: $flamingockVersion")
+    return flamingockVersion
 }

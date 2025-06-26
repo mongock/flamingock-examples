@@ -1,0 +1,6 @@
+pipeline:
+  stages:
+    - name: mongodb-initialisation
+      type: legacy
+      description: Adding a package for new changeUnits
+      sourcesPackage: io.flamingock.examples.mongodb.springboot.springdata.changes

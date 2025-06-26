@@ -1,0 +1,5 @@
+pipeline:
+  stages:
+    - name: mongodb-initialisation
+      description: Adding a package for new changeUnits
+      sourcesPackage: io.flamingock.examples.community.changes

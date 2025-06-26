@@ -1,8 +1,0 @@
-flamingock:
-  stages:
-    - name: mongodb-migration
-      code-packages:
-        - io.flamingock.examples.mongodb.springboot.springdata.mongock
-        - io.flamingock.examples.mongodb.springboot.springdata.changes
-  transactionDisabled: false
-  legacy-mongock-changelog-source: mongockChangeLog # setting this for importing Mongock legacy audits

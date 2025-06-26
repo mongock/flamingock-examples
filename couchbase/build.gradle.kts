@@ -15,35 +15,30 @@ group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
 val flamingockVersion = flamingockVersion()
-val awsSdkVersion = "2.25.28"
+
+val couchbaseVersion = "3.4.4"
 
 dependencies {
-    // Flamingock Dependencies
+//    Flamingock Dependencies
     implementation(platform("io.flamingock:flamingock-ce-bom:$flamingockVersion"))
-    implementation("io.flamingock:flamingock-ce-dynamodb")
+    implementation("io.flamingock:flamingock-ce-couchbase")
     annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion") //TODO: remove $flamingockVersion
 
-    // AWS SDK Dependencies
-    implementation("software.amazon.awssdk:s3:$awsSdkVersion")
-    implementation("software.amazon.awssdk:apache-client:${awsSdkVersion}")
-    implementation("software.amazon.awssdk:dynamodb:$awsSdkVersion")  // Add this line
-    implementation("software.amazon.awssdk:dynamodb-enhanced:$awsSdkVersion")
-    implementation("software.amazon.awssdk:url-connection-client:$awsSdkVersion")
+//    Couchbase dependency
+    implementation("com.couchbase.client:java-client:$couchbaseVersion")
 
-    // Others dependencies needed for this example
+//    Others dependencies needed for this example
     implementation("org.slf4j:slf4j-simple:2.0.6")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("org.assertj:assertj-core:3.24.2")
-    testImplementation("org.testcontainers:testcontainers:1.19.3")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
-    testImplementation("org.testcontainers:localstack:1.19.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    
+    testImplementation("org.testcontainers:couchbase:1.18.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.18.3")
 }
 
 application {
-    mainClass = "io.flamingock.examples.s3.S3FlamingockExample"
+    mainClass = "io.flamingock.examples.community.couchbase.CommunityStandaloneCouchbaseApp"
 }
 
 tasks.withType<Test>().configureEach {

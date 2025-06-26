@@ -1,0 +1,5 @@
+pipeline:
+  stages:
+    - name: dynamodb-initialisation
+      description: Adding a package for new changeUnits (note that legacy and new changeUnits can coexist in the same package)
+      sourcesPackage: io.flamingock.examples.dynamodb.standalone.changes

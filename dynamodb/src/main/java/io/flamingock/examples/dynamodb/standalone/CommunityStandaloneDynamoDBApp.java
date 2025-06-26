@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package io.flamingock.examples.s3;
+package io.flamingock.examples.dynamodb.standalone;
 
-import io.flamingock.community.Flamingock;
-import io.flamingock.examples.s3.util.DynamoDBUtil;
-import io.flamingock.examples.s3.util.S3Util;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.s3.S3Client;
+import io.flamingock.community.Flamingock;
 
 import java.net.URISyntaxException;
 
-public class S3FlamingockExample {
+public class CommunityStandaloneDynamoDBApp {
 
     public static void main(String[] args) throws URISyntaxException {
-        new S3FlamingockExample().run(S3Util.getClient(), DynamoDBUtil.getClient());
+        new CommunityStandaloneDynamoDBApp().run(DynamoDBUtil.getClient());
     }
 
-    public void run(S3Client s3Client, DynamoDbClient dynamoDbClient) {
+    public void run(DynamoDbClient client) {
 
+        //Running flamingock
         Flamingock.builder()
-                .addDependency(dynamoDbClient)
-                .addDependency(s3Client)
+                .addDependency(client)
                 .build()
                 .run();
     }

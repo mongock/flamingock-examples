@@ -4,6 +4,9 @@ import javax.xml.parsers.DocumentBuilderFactory
 plugins {
     java
     application
+//    Springboot plugins
+    id("org.springframework.boot") version "3.1.3"
+    id("io.spring.dependency-management") version "1.1.3"
 }
 
 repositories {
@@ -15,35 +18,34 @@ group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
 val flamingockVersion = flamingockVersion()
-val awsSdkVersion = "2.25.28"
 
 dependencies {
-    // Flamingock Dependencies
+//    Flamingock Dependencies
     implementation(platform("io.flamingock:flamingock-ce-bom:$flamingockVersion"))
-    implementation("io.flamingock:flamingock-ce-dynamodb")
+    implementation ("io.flamingock:flamingock-ce-mongodb-springdata:$flamingockVersion") //TODO: remove $flamingockVersion
     annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion") //TODO: remove $flamingockVersion
+    implementation("io.flamingock:flamingock-springboot-integration:$flamingockVersion") //TODO: remove $flamingockVersion
 
-    // AWS SDK Dependencies
-    implementation("software.amazon.awssdk:s3:$awsSdkVersion")
-    implementation("software.amazon.awssdk:apache-client:${awsSdkVersion}")
-    implementation("software.amazon.awssdk:dynamodb:$awsSdkVersion")  // Add this line
-    implementation("software.amazon.awssdk:dynamodb-enhanced:$awsSdkVersion")
-    implementation("software.amazon.awssdk:url-connection-client:$awsSdkVersion")
+//    Springboot dependency
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
-    // Others dependencies needed for this example
+//    Springdata for MongoDB dependency
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+
+//    Others dependencies needed for this example
     implementation("org.slf4j:slf4j-simple:2.0.6")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("org.assertj:assertj-core:3.24.2")
-    testImplementation("org.testcontainers:testcontainers:1.19.3")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
-    testImplementation("org.testcontainers:localstack:1.19.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+
+    testImplementation("org.testcontainers:mongodb:1.18.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.18.3")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 application {
-    mainClass = "io.flamingock.examples.s3.S3FlamingockExample"
+    mainClass = "io.flamingock.examples.mongodb.springboot.springdata.MongodbSpringbootSpringdata"
 }
 
 tasks.withType<Test>().configureEach {
