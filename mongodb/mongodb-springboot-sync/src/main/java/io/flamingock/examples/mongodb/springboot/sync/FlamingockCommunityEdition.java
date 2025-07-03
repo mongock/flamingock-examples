@@ -31,13 +31,13 @@ import org.springframework.context.annotation.Bean;
 //Set Flamingock On
 @EnableFlamingock
 @SpringBootApplication
-public class CommunitySpringbootMongodbSyncApp {
+public class FlamingockCommunityEdition {
     public final static String DATABASE_NAME = "test";
 
-    public final static String CLIENTS_COLLECTION_NAME = "clientCollection";
+    public final static String CLIENTS_COLLECTION_NAME = "clients";
 
     public static void main(String[] args) {
-        SpringApplication.run(CommunitySpringbootMongodbSyncApp.class, args);
+        SpringApplication.run(FlamingockCommunityEdition.class, args);
     }
 
 //    Configure bean for Flamingock Driver to use

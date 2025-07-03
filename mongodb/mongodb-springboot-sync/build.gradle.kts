@@ -17,7 +17,7 @@ repositories {
 group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
-val flamingockVersion = flamingockVersion()
+val flamingockVersion = flamingockVersion("0.0.34-beta")
 
 val mongodbVersion = "4.3.3"
 
@@ -25,6 +25,7 @@ dependencies {
 //    Flamingock Dependencies
     implementation("io.flamingock:flamingock-springboot-v2-runner:$flamingockVersion")
     implementation("io.flamingock:mongodb-sync-v4-driver:$flamingockVersion")
+    annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion")
 
 //    Springboot dependency
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -64,13 +65,34 @@ tasks.withType<Test>().configureEach {
     }
 }
 
-// Get Flamingock version from parameter or last
-fun flamingockVersion(): String {
-    var passedAsParameter = false
-    val flamingockVersionAsParameter: String? = project.findProperty("flamingockVersion")?.toString()
-    val flamingockVersion: String =  if(flamingockVersionAsParameter != null) {
-        passedAsParameter = true
-        flamingockVersionAsParameter
+/**
+ * Retrieves the Flamingock library version to be used during the build process.
+ *
+ * Version resolution follows this priority:
+ * 1. If a version is passed as a Gradle script property (`-PflamingockVersion=...`), it takes precedence.
+ * 2. If a version is passed directly to the method via [inlinedVersion], it is used as a fallback.
+ * 3. If neither of the above is provided, it fetches the latest version available from Maven Central.
+ *
+ * Example usage:
+ * ```
+ * dependencies {
+ *     implementation("io.flamingock:flamingock-core:${flamingockVersion()}")
+ * }
+ * ```
+ *
+ * @param inlinedVersion optional version string passed directly to the method.
+ * @return the resolved Flamingock version to use.
+ * @throws RuntimeException if the latest version cannot be retrieved from Maven metadata.
+ */
+fun flamingockVersion(inlinedVersion: String? = null): String {
+    val versionAsScriptParameter: String? = project.findProperty("flamingockVersion")?.toString()
+
+    return if(versionAsScriptParameter != null) {
+        logger.lifecycle("Building with flamingock version[from parameter]: $versionAsScriptParameter")
+        versionAsScriptParameter
+    } else if(inlinedVersion != null) {
+        logger.lifecycle("Building with flamingock version[inlined]: $inlinedVersion")
+        inlinedVersion
     } else {
         //using "release.latest" doesn't play nice with intellij
         val metadataUrl = "https://repo.maven.apache.org/maven2/io/flamingock/flamingock-core/maven-metadata.xml"
@@ -79,11 +101,11 @@ fun flamingockVersion(): String {
             val documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
             val inputStream = metadata.byteInputStream()
             val document = documentBuilder.parse(inputStream)
-            document.getElementsByTagName("latest").item(0).textContent
+            val latestVersion = document.getElementsByTagName("latest").item(0).textContent
+            logger.lifecycle("Building with flamingock version[latest]: $latestVersion")
+            latestVersion
         } catch (e: Exception) {
             throw RuntimeException("Cannot obtain Flamingock's latest version")
         }
     }
-    logger.lifecycle("Building with flamingock version${if(passedAsParameter)"[from parameter]" else ""}: $flamingockVersion")
-    return flamingockVersion
 }

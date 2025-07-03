@@ -1,84 +1,113 @@
 ![Header Image](../../misc/logo-with-text.png)
-___
-
-# MongoDB Springboot Example
-
-## 📖 Example Overview
-
-Welcome to the MongoDB Springboot Example. This demonstrates how to use Flamingock with MongoDB in a Java
-Springboot application. It highlights key functionalities such as configuring Flamingock in a Springboot application.
-
-As Springboot application, Flamingock configuration was in *resources/application.yml*:
-```yaml
-flamingock:
-  stages:
-    - name: stage1
-      code-packages:
-        - io.flamingock.examples.mongodb.springboot.sync.changes
-  transactionDisabled: false
-```
-
-This example has 3 Flamingock Changes:
-1. Creates a new collection called *clientCollection*.
-2. Adds one document to collection.
-3. Adds another document to collection.
-
-## Table of Contents
-
-1. [📌 Dependencies](#-dependencies)
-2. [🛠 How to Run this Example](#-how-to-run-this-example)
-3. [✅ Proven Functionalities](#-proven-functionalities)
 
 ---
 
-## 📌 Dependencies
+# MongoDB Spring Boot Example (Community Edition)
 
-This example requires the following dependencies:
-### Flamingock Dependencies
-    implementation("io.flamingock:flamingock-springboot-v2-runner:0.0.32-beta")
-    implementation("io.flamingock:mongodb-sync-v4-driver:0.0.32-beta")
+## ✨ Overview
 
-### Springboot Dependency
-    implementation("org.springframework.boot:spring-boot-starter-web")
+This example showcases how to use **Flamingock Community Edition** in a Java **Spring Boot 2.x** application with **MongoDB Sync 4.x**. 
+It demonstrates how to configure and execute Flamingock with **code-based change definitions** (it also supports **template-based** changes).
 
-### MongoDB Dependencies
-    implementation("org.mongodb:mongodb-driver-sync:4.3.3")
-    implementation("org.mongodb:mongodb-driver-core:4.3.3")
-    implementation("org.mongodb:bson:4.3.3")
+> While this example focuses on applying changes to a MongoDB database, Flamingock is designed to support a wide range of technologies—not limited to databases—and allows combining changes across different systems within the same project.
 
-Also, it requieres the following plugins:
-### Springboot plugins
-    id("org.springframework.boot") version "2.7.12"
-    id("io.spring.dependency-management") version "1.1.0"
+---
 
-## 🛠 How to Run this Example
+## 📊 What the Application Does
 
-There are two ways to run this example:
+This example application demonstrates a simple process to apply and audit system changes during application startup using Flamingock. The configured pipeline contains a single stage with the following changes:
 
-### 1. Run Test (Recomended)
-The recommended method to run this example is by executing the tests, which include a MongoDB TestContainer for testing
-purposes.
-```shell
+1. `_1_create_clients_collection.java`: **Creates** the `clients` collection in the MongoDB database.
+2. `_2_insert_client_federico.java`: **Inserts a new client** into the `clients` collection.
+3. `_3_insert_client_jorge.java`: **Inserts another new client** into the same collection.
+
+---
+
+## ⚖️ Flamingock Setup Highlights
+
+### ⚡ Community Edition
+This example uses the **Community Edition**, which runs entirely locally.
+
+### 🔹 Annotation Processor
+To enable Flamingock to detect and process changes, you must include the **annotation processor** in your Gradle configuration:
+```kotlin
+annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion")
+```
+
+### 📜 Pipeline Configuration
+The pipeline is defined in:
+```
+src/main/resources/flamingock/pipeline.yaml
+```
+This file declares the stages to be processed. Each stage must define **at least one** of the following:
+
+- `sourcesPackage`: A Java package containing Flamingock `@Change` classes or template-based files.
+- `resourcesDir`: A directory containing template-based changes (such as YAML files).
+
+You can use both in the same stage if needed.
+
+> **Note**: The `pipeline.yaml` defines the order of the **stages**, while the order of the changes within each stage is defined by the `order` attribute in each change class or template.
+
+#### 📅 Example pipeline.yaml
+```yaml
+pipeline:
+  stages:
+    - name: "mongodb-stage"
+      description: "Stage processing a MongoDB migration"
+      sourcesPackage: "io.flamingock.examples.mongodb.springboot.sync.changes"
+```
+
+---
+
+## 📅 How to Run This Example
+
+### ✅ Recommended: Run with TestContainers
+This example uses [Testcontainers](https://www.testcontainers.org/) to spin up a real MongoDB instance for testing.
+```bash
 ./gradlew test
 ```
 
-### 2. Run Main Class
-To run the main class, ensure you have MongoDB running. Configure a Springboot bean with your own endpoint that returns
-a MongoClient object, if needed. And run example with:
-```shell
+### 🚀 Run the Application
+Ensure MongoDB is running locally, then run:
+```bash
 ./gradlew run
 ```
+You can configure a custom `MongoClient` bean if needed.
 
-## ✅ Proven functionalities
+---
 
-This example demonstrates the following functionalities:
-1. Configuring Flamingock in a Springboot application
-   - Configure Driver as Springboot Bean
-   - Configure Changes parameters as Springboot Beans
-   - Set Stages and other configuration in *resources/application.yml*
-   - Set Listeners as Springboot Beans too
+## 🔹 Dependencies
 
-___
+### Flamingock:
+```kotlin
+implementation("io.flamingock:flamingock-springboot-v2-runner:$flamingockVersion")
+implementation("io.flamingock:mongodb-sync-v4-driver:$flamingockVersion")
+annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion")
+```
+
+### Spring Boot:
+```kotlin
+implementation("org.springframework.boot:spring-boot-starter-web")
+```
+
+### MongoDB:
+```kotlin
+implementation("org.mongodb:mongodb-driver-sync:4.3.3")
+implementation("org.mongodb:mongodb-driver-core:4.3.3")
+implementation("org.mongodb:bson:4.3.3")
+```
+
+---
+
+## 🔧 Proven Functionalities
+
+- ✅ Integration of Flamingock with Spring Boot 2.x
+- ✅ Configuration via Spring Boot beans
+- ✅ Pipeline execution through `pipeline.yaml`
+- ✅ Use of Flamingock’s Java-based change API
+- ✅ Event listeners for execution lifecycle (start, success, failure)
+
+---
 
 ### 📢 Contributing
 We welcome contributions! If you have an idea for a new example or improvement to an existing one, feel free to submit a
@@ -102,3 +131,4 @@ ___
 
 ### 🔥 Explore, experiment, and empower your projects with Flamingock!
 Let us know what you think or where you’d like to see Flamingock used next.
+

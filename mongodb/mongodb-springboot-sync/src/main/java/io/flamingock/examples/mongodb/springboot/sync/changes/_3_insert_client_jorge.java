@@ -16,15 +16,20 @@
 
 package io.flamingock.examples.mongodb.springboot.sync.changes;
 
-import io.flamingock.core.api.annotations.ChangeUnit;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import io.flamingock.core.api.annotations.Change;
 import io.flamingock.core.api.annotations.Execution;
-import org.springframework.context.annotation.Profile;
+import io.flamingock.examples.mongodb.springboot.sync.FlamingockCommunityEdition;
+import org.bson.Document;
 
-@Profile("!accepted-profile-1")
-@ChangeUnit( id="profile-not-included-change" , order = "4")
-public class NegativeProfileChange {
+@Change( id="insert-client-jorge" , order = "3")
+public class _3_insert_client_jorge {
 
     @Execution
-    public void execution() {
+    public void execution(MongoDatabase mongoDatabase, ClientSession clientSession) {
+        MongoCollection<Document> collection = mongoDatabase.getCollection(FlamingockCommunityEdition.CLIENTS_COLLECTION_NAME);
+        collection.insertOne(clientSession, new Document().append("name", "Jorge"));
     }
 }

@@ -1,0 +1,6 @@
+pipeline:
+  stages:
+    - name: "mongodb-stage"
+      description: "Stage processing a MongoDB migration"
+      sourcesPackage: "io.flamingock.examples.mongodb.springboot.sync.changes"
+
